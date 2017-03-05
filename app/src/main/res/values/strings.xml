@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">GameScorer</string>
+
+    <string name="red_ball">Red</string>
+    <string name="yellow_ball">Yellow</string>
+    <string name="green_ball">Green</string>
+    <string name="brown_ball">Brown</string>
+    <string name="blue_ball">Blue</string>
+    <string name="pink_ball">Pink</string>
+    <string name="black_ball">Black</string>
+    <string name="miss_ball">Miss</string>
+    <string name="foul_ball">Foul</string>
+    <string name="free_button">Free</string>
+    <string name="reset_button">Reset</string>
+    <string name="player_1_name">Player 1</string>
+    <string name="player_2_name">Player 2</string>
+    <string name="player_1_wins">Player 1 Wins!</string>
+    <string name="player_2_wins">Player 2 Wins!</string>
+    <string name="game_draw">It\'s A Draw!</string>
+    <string name="ball_on">Ball On:</string>
+    <string name="colored_balls_on">Balls On: Colored</string>
+    <string name="red_balls_remaining">Red Balls Remaining</string>
+    <string name="foul_potted">Foul! Should have potted a</string>
+    <string name="color">Color</string>
+    <string name="player_1_name_hint">Player 1 Name</string>
+    <string name="player_2_name_hint">Player 2 Name</string>
+
+</resources>

@@ -1,0 +1,60 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Balls">
+        <item name="android:layout_width">@dimen/ball_size</item>
+        <item name="android:layout_height">@dimen/ball_size</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@color/buttonBackground</item>
+        <item name="android:paddingTop">@dimen/ball_padding</item>
+        <item name="android:paddingBottom">@dimen/ball_padding</item>
+    </style>
+
+    <style name="WWrapHWrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="WMatchHWrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="WWrapHWrap.PlayerName">
+        <item name="android:textSize">@dimen/player_name_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
+    </style>
+
+    <style name="WWrapHWrap.Score">
+        <item name="android:textSize">@dimen/score_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
+    </style>
+
+    <style name="WWrapHWrap.BallInfo">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="WWrapHWrap.BallInfo.Potted">
+
+    </style>
+
+    <style name="WWrapHWrap.BallInfo.Free">
+
+    </style>
+
+    <style name="WWrapHWrap.BallInfo.OnTable">
+
+    </style>
+
+</resources>
