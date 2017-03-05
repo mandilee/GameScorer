@@ -378,7 +378,7 @@ public class SnookerActivity extends AppCompatActivity {
 
                 case 6:
                     allBallsPotted(ibBallPink);
-                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.blue_ball));
+                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.black_ball));
                     activeBall = 7;
                     break;
 
