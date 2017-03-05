@@ -41,7 +41,7 @@
                     android:id="@+id/player_one_score"
                     style="@style/WWrapHWrap.Score"
                     android:gravity="center"
-                    android:text="0"/>
+                    android:text="@string/zero"/>
             </LinearLayout>
 
             <LinearLayout
@@ -62,7 +62,7 @@
                     android:id="@+id/player_two_score"
                     style="@style/WWrapHWrap.Score"
                     android:gravity="center"
-                    android:text="0"/>
+                    android:text="@string/zero"/>
             </LinearLayout>
         </LinearLayout>
 

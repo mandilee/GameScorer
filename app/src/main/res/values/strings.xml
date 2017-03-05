@@ -24,5 +24,6 @@
     <string name="color">Color</string>
     <string name="player_1_name_hint">Player 1 Name</string>
     <string name="player_2_name_hint">Player 2 Name</string>
+    <string name="zero">0</string>
 
 </resources>
