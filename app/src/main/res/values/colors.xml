@@ -15,6 +15,5 @@
     <color name="inactivePlayerBackground">#FFFF</color>
 
     <color name="activeBallBackground">#FFFF00</color>
-
-    <color name="inactiveBallBackground">#FFFF</color>
+    <color name="inactiveBallBackground">#FFFFFF</color>
 </resources>

@@ -41,7 +41,7 @@
                     android:id="@+id/player_one_score"
                     style="@style/WWrapHWrap.Score"
                     android:gravity="center"
-                    tools:text="456"/>
+                    android:text="0"/>
             </LinearLayout>
 
             <LinearLayout
@@ -62,9 +62,10 @@
                     android:id="@+id/player_two_score"
                     style="@style/WWrapHWrap.Score"
                     android:gravity="center"
-                    tools:text="123"/>
+                    android:text="0"/>
             </LinearLayout>
         </LinearLayout>
+
         <!-- THE BALLS -->
         <TableLayout
             android:layout_width="match_parent"
@@ -164,10 +165,11 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <!--<Button android:id="@+id/ball_free"
+            <Button
+                android:id="@+id/ball_free"
                 style="@style/WMatchHWrap"
                 android:drawableEnd="@drawable/free"
-                android:text="@string/free_button"/>-->
+                android:text="@string/free_button"/>
 
             <Button
                 android:id="@+id/reset"

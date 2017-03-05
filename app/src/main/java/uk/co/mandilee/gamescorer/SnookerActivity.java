@@ -14,26 +14,36 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class SnookerActivity extends AppCompatActivity {
+public class SnookerActivity extends AppCompatActivity implements View.OnClickListener {
 
     final private int numRedBalls = 15;
+
     private final ArrayList<ImageButton> ibBalls = new ArrayList<>(); // ArrayList for balls to tidy code a bit
+
     private int playerOneScore = 0,
             playerTwoScore = 0,
             redBallsPotted = 0,
+            minBall = 1,
             activeBall = 1, // initialise so it sets correct player to begin with
             activePlayer = 0; // first active ball is red
-    private Boolean freeBall = false, // NOT YET IMPLEMENTED
+
+    private Boolean isFree = false,
             isFoul = false,
             isMiss = false;
+
     private EditText
             etPlayerOneName, etPlayerTwoName; // EditText views for player names
+
     private TextView tvPlayerOneScore, tvPlayerTwoScore, // TextViews for player scores
             tvCurrentActivity, // TextView to update current Ball On
             tvRedBallsRemaining; // TextView to show how many red balls remaining
+
     private LinearLayout llPlayerOne, llPlayerTwo; // LinearLayouts to set background for active player
+
     private ImageButton ibBallRed, ibBallYellow, ibBallGreen, ibBallBrown, ibBallBlue, ibBallPink, ibBallBlack, ibBallMiss, ibBallFoul; // ImageButtons to refer to later
-    private Button bBallFree; // Button for Free Ball - not yet implemented
+
+    private Button bBallFree, // Button for Free Ball
+            bReset; // Button for Reset button
 
     private static void setImageButtonEnabled(ImageButton item, boolean enabled) {
         item.setClickable(enabled);
@@ -45,11 +55,19 @@ public class SnookerActivity extends AppCompatActivity {
         }
     }
 
-    /* NOT YET IMPLEMENTED
-    private void setFreeBall() {
-        freeBall = true;
+    private void setFreeBall(Boolean free) {
+        isFree = free;
+
+        int backgroundColour;
+        // select colour based on whether or not active is true
+        if (isFree) {
+            backgroundColour = R.color.activeBallBackground;
+        } else {
+            backgroundColour = android.R.drawable.btn_default;
+        }
+
+        bBallFree.setBackgroundResource(backgroundColour);
     }
-    //*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,111 +86,39 @@ public class SnookerActivity extends AppCompatActivity {
         tvCurrentActivity = (TextView) findViewById(R.id.current_activity);
         tvRedBallsRemaining = (TextView) findViewById(R.id.red_balls_remaining);
 
-        // Grab ImageButton for Red Ball and set Listener
         ibBallRed = (ImageButton) findViewById(R.id.ball_red);
-        ibBallRed.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(1);
-            }
-        });
+        ibBallRed.setOnClickListener(this);
 
-        // Grab ImageButton for Yellow Ball and set Listener
         ibBallYellow = (ImageButton) findViewById(R.id.ball_yellow);
-        ibBallYellow.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(2);
-            }
-        });
+        ibBallYellow.setOnClickListener(this);
 
-        // Grab ImageButton for Green Ball and set Listener
         ibBallGreen = (ImageButton) findViewById(R.id.ball_green);
-        ibBallGreen.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(3);
-            }
-        });
+        ibBallGreen.setOnClickListener(this);
 
-        // Grab ImageButton for Brown Ball and set Listener
         ibBallBrown = (ImageButton) findViewById(R.id.ball_brown);
-        ibBallBrown.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(4);
-            }
-        });
+        ibBallBrown.setOnClickListener(this);
 
-        // Grab ImageButton for Blue Ball and set Listener
         ibBallBlue = (ImageButton) findViewById(R.id.ball_blue);
-        ibBallBlue.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(5);
-            }
-        });
+        ibBallBlue.setOnClickListener(this);
 
-        // Grab ImageButton for Pink Ball and set Listener
         ibBallPink = (ImageButton) findViewById(R.id.ball_pink);
-        ibBallPink.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(6);
-            }
-        });
+        ibBallPink.setOnClickListener(this);
 
-        // Grab ImageButton for Black Ball and set Listener
         ibBallBlack = (ImageButton) findViewById(R.id.ball_black);
-        ibBallBlack.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setScore(7);
-            }
-        });
+        ibBallBlack.setOnClickListener(this);
 
-        // Grab ImageButton for Missed Ball and set Listener
         ibBallMiss = (ImageButton) findViewById(R.id.ball_miss);
-        ibBallMiss.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                isMiss = true;
-                switchPlayer();
-                isMiss = false;
-            }
-        });
+        ibBallMiss.setOnClickListener(this);
 
-        // Grab ImageButton for Fouled Ball and set Listener
         ibBallFoul = (ImageButton) findViewById(R.id.ball_foul);
-        ibBallFoul.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                isFoul = true;
-                setFoul();
-                isFoul = false;
-            }
-        });
+        ibBallFoul.setOnClickListener(this);
 
-        /* NOT YET IMPLEMENTED
         bBallFree = (Button) findViewById(R.id.ball_free);
-        bBallFree.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                setFreeBall();
-            }
-        });
-        //*/
+        bBallFree.setOnClickListener(this);
 
-        // Grab Button for Resetting and set Listener
-        Button bReset = (Button) findViewById(R.id.reset);
-        bReset.setOnClickListener(new MyOnClickListener(activePlayer, activeBall) {
-            @Override
-            public void onClick(View v) {
-                resetButton();
-            }
-        });
+        bReset = (Button) findViewById(R.id.reset);
+        bReset.setOnClickListener(this);
 
-        // Add Ball ImageButtons to the ArrayList for later
         ibBalls.add(ibBallRed);
         ibBalls.add(ibBallYellow);
         ibBalls.add(ibBallGreen);
@@ -182,6 +128,48 @@ public class SnookerActivity extends AppCompatActivity {
         ibBalls.add(ibBallBlack);
 
         switchPlayer();
+    }
+
+    @Override
+    public void onClick(View v) {
+        // Perform action on click
+        switch (v.getId()) {
+            case R.id.ball_red:
+                setScore(1);
+                break;
+            case R.id.ball_yellow:
+                setScore(2);
+                break;
+            case R.id.ball_green:
+                setScore(3);
+                break;
+            case R.id.ball_brown:
+                setScore(4);
+                break;
+            case R.id.ball_blue:
+                setScore(5);
+                break;
+            case R.id.ball_pink:
+                setScore(6);
+                break;
+            case R.id.ball_black:
+                setScore(7);
+                break;
+            case R.id.ball_miss:
+                isMiss = true;
+                switchPlayer();
+                break;
+            case R.id.ball_foul:
+                isFoul = true;
+                setFoul();
+                break;
+            case R.id.reset:
+                resetButton();
+                break;
+            case R.id.ball_free:
+                setFreeBall(true);
+                break;
+        }
     }
 
     private void showText(String message) {
@@ -194,17 +182,19 @@ public class SnookerActivity extends AppCompatActivity {
             activePlayer = 2;
             setPlayerColour(tvPlayerTwoScore, etPlayerTwoName, llPlayerTwo, true, false);
             setPlayerColour(tvPlayerOneScore, etPlayerOneName, llPlayerOne, false, false);
+
         } else {
             // If player 2 is active, switch to player 2
             activePlayer = 1;
             setPlayerColour(tvPlayerTwoScore, etPlayerTwoName, llPlayerTwo, false, false);
             setPlayerColour(tvPlayerOneScore, etPlayerOneName, llPlayerOne, true, false);
         }
+
         // if it's not a foul or a miss, or there are red balls remaining, set active ball to Red
         if ((!isFoul && !isMiss) || redBallsPotted < numRedBalls) {
             setActiveBall(0);
-//        } else {
-//            activeBall = 1;
+        } else {
+            activeBall = minBall;
         }
     }
 
@@ -244,20 +234,19 @@ public class SnookerActivity extends AppCompatActivity {
             backgroundColour = R.color.inactiveBallBackground;
         }
         // set colours by methods required by build version
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ball.setBackgroundColor(getResources().getColor(backgroundColour, getTheme()));
-        } else {
-            ball.setBackgroundColor(getResources().getColor(backgroundColour));
-        }
+        ball.setBackgroundResource(backgroundColour);
     }
 
     private void setScore(int addThisScore) {
-        /* NOT YET IMPLEMENTED
-        if (freeBall) {
-            addThisScore = activeBall;
-        }*/
+        if (isFree) {
+            if (activeBall == 0) {
+                addThisScore = 1;
+            } else {
+                addThisScore = activeBall;
+            }
+        }
         // if potted ball isn't active then set as foul!
-        if (!isFoul && activeBall > 0 && activeBall != addThisScore) {
+        if (!isFoul && activeBall > 0 && activeBall != addThisScore && !isFree) {
             isFoul = true;
             if (activeBall == 1) {
                 showText(getString(R.string.foul_potted) + " " + getString(R.string.red_ball));
@@ -277,6 +266,7 @@ public class SnookerActivity extends AppCompatActivity {
                 setActiveBall(addThisScore);
             }
             isFoul = false;
+            setFreeBall(false);
         }
     }
 
@@ -318,7 +308,14 @@ public class SnookerActivity extends AppCompatActivity {
             redBallsPotted++;
         }
         if (redBallsPotted < numRedBalls) {
-            if (ball == 1 && activeBall == 1) {
+            if (isFree) {
+                if (activeBall == 1) {
+                    activeBall = 0;
+                    setColoredBallsActive();
+                    tvCurrentActivity.setText(getText(R.string.colored_balls_on));
+                }
+
+            } else if (ball == 1 && activeBall == 1) {
                 activeBall = 0;
                 setColoredBallsActive();
                 tvCurrentActivity.setText(getText(R.string.colored_balls_on));
@@ -333,53 +330,58 @@ public class SnookerActivity extends AppCompatActivity {
                 setBallActive();
                 tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.red_ball));
             }
-
             tvRedBallsRemaining.setText((numRedBalls - redBallsPotted) + " " + getString(R.string.red_balls_remaining));
 
         } else if (redBallsPotted == numRedBalls) {
             redBallsPotted++;
             activeBall = 2;
-            allBallsPotted(ibBallRed);
-            tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.yellow_ball));
-            tvRedBallsRemaining.setText("");
             setBallActive();
+            allBallsPotted(ibBallRed);
+            tvRedBallsRemaining.setText("");
+            tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.yellow_ball));
 
         } else {
             switch (ball) {
                 case 1:
                     allBallsPotted(ibBallRed);
                     activeBall = 2;
+                    minBall = 2;
                     tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.yellow_ball));
                     break;
 
                 case 2:
                     allBallsPotted(ibBallYellow);
                     activeBall = 3;
+                    minBall = 3;
                     tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.green_ball));
                     break;
 
                 case 3:
                     allBallsPotted(ibBallGreen);
-                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.brown_ball));
                     activeBall = 4;
+                    minBall = 4;
+                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.brown_ball));
                     break;
 
                 case 4:
                     allBallsPotted(ibBallBrown);
-                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.blue_ball));
                     activeBall = 5;
+                    minBall = 5;
+                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.blue_ball));
                     break;
 
                 case 5:
                     allBallsPotted(ibBallBlue);
-                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.pink_ball));
                     activeBall = 6;
+                    minBall = 6;
+                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.pink_ball));
                     break;
 
                 case 6:
                     allBallsPotted(ibBallPink);
-                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.black_ball));
                     activeBall = 7;
+                    minBall = 7;
+                    tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(R.string.black_ball));
                     break;
 
                 case 7:
@@ -390,6 +392,7 @@ public class SnookerActivity extends AppCompatActivity {
             }
             setBallActive();
         }
+        setFreeBall(false);
     }
 
     private void resetButton() {
@@ -432,4 +435,5 @@ public class SnookerActivity extends AppCompatActivity {
             showText(getString(R.string.game_draw));
         }
     }
+
 }
