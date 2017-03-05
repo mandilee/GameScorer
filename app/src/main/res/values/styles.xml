@@ -8,13 +8,23 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Player">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginLeft">@dimen/player_name_margin</item>
+        <item name="android:layout_marginRight">@dimen/player_name_margin</item>
+    </style>
+
     <style name="Balls">
         <item name="android:layout_width">@dimen/ball_size</item>
         <item name="android:layout_height">@dimen/ball_size</item>
         <item name="android:scaleType">fitCenter</item>
-        <item name="android:background">@color/buttonBackground</item>
+        <item name="android:background">@color/snookerTableGreen</item>
         <item name="android:paddingTop">@dimen/ball_padding</item>
         <item name="android:paddingBottom">@dimen/ball_padding</item>
+        <item name="android:layout_marginLeft">@dimen/ball_padding</item>
+        <item name="android:layout_marginRight">@dimen/ball_padding</item>
     </style>
 
     <style name="WWrapHWrap">

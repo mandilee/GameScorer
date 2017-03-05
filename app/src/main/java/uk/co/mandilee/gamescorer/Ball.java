@@ -107,21 +107,21 @@ class Ball {
     }
 
     void setBallInactive() {
-        mImageButton.setBackgroundResource(R.color.inactiveBallBackground);
+        mImageButton.setBackgroundResource(R.color.snookerTableGreen);
     }
 
 
     void disableImageButton() {
         if (isImageButton()) {
             mImageButton.setClickable(false);
-            mImageButton.setColorFilter(Color.argb(255, 255, 255, 255));
+            mImageButton.setColorFilter(Color.argb(255, 10, 108, 3));
         }
     }
 
     void enableImageButton() {
         if (isImageButton()) {
             mImageButton.setClickable(true);
-            mImageButton.setColorFilter(Color.argb(0, 255, 255, 255));
+            mImageButton.setColorFilter(Color.argb(0, 10, 108, 3));
         }
     }
 }

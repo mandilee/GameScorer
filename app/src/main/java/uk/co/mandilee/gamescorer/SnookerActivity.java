@@ -164,7 +164,7 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
             backgroundColour = R.color.activePlayerBackground;
         } else {
             textColor = R.color.inactivePlayerText;
-            backgroundColour = R.color.inactivePlayerBackground;
+            backgroundColour = R.color.snookerTableGreen;
         }
         // set colours by methods required by build version
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

@@ -15,5 +15,7 @@
     <color name="inactivePlayerBackground">#FFFF</color>
 
     <color name="activeBallBackground">#FFFF00</color>
-    <color name="inactiveBallBackground">#FFFFFF</color>
+    <color name="inactiveBallBackground">#0a6c03</color>
+
+    <color name="snookerTableGreen">#0a6c03</color>
 </resources>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/snookerTableGreen"
     android:fillViewport="true"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -25,9 +26,7 @@
 
             <LinearLayout
                 android:id="@+id/player_one"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/Player"
                 android:orientation="vertical">
                 <!-- THE PLAYERS -->
                 <EditText
@@ -46,9 +45,7 @@
 
             <LinearLayout
                 android:id="@+id/player_two"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                style="@style/Player"
                 android:orientation="vertical">
 
                 <EditText
@@ -144,6 +141,13 @@
             </TableRow>
         </TableLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+            >
+
         <TextView
             android:id="@+id/current_activity"
             style="@style/WWrapHWrap.PlayerName"
@@ -155,13 +159,12 @@
             style="@style/WWrapHWrap.PlayerName"
             android:layout_gravity="center"
             tools:text="15 Remaining"/>
-
+        </LinearLayout>
         <!-- THE BUTTONS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_weight="1"
             android:gravity="bottom"
             android:orientation="vertical">
 

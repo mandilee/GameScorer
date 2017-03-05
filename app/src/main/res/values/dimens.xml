@@ -6,5 +6,6 @@
     <dimen name="ball_padding">4dp</dimen>
     <dimen name="ball_spacing">10dp</dimen>
     <dimen name="player_name_size">20sp</dimen>
+    <dimen name="player_name_margin">10dp</dimen>
     <dimen name="score_size">30sp</dimen>
 </resources>
