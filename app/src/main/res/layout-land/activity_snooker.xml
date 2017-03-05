@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="uk.co.mandilee.gamescorer.SnookerActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/player_one"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <!-- THE PLAYERS -->
+                <EditText
+                    android:id="@+id/player_one_name"
+                    style="@style/WWrapHWrap.PlayerName"
+                    android:gravity="center"
+                    android:hint="@string/player_1_name_hint"
+                    android:text="@string/player_1_name"/>
+
+                <TextView
+                    android:id="@+id/player_one_score"
+                    style="@style/WWrapHWrap.Score"
+                    android:gravity="center"
+                    android:text="0"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/current_activity"
+                    style="@style/WWrapHWrap.PlayerName"
+                    android:layout_gravity="center"
+                    tools:text="Red Ball On"/>
+
+                <TextView
+                    android:id="@+id/red_balls_remaining"
+                    style="@style/WWrapHWrap.PlayerName"
+                    android:layout_gravity="center"
+                    tools:text="15 Remaining"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/player_two"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/player_two_name"
+                    style="@style/WWrapHWrap.PlayerName"
+                    android:gravity="center"
+                    android:hint="@string/player_2_name_hint"
+                    android:text="@string/player_2_name"/>
+
+                <TextView
+                    android:id="@+id/player_two_score"
+                    style="@style/WWrapHWrap.Score"
+                    android:gravity="center"
+                    android:text="0"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- THE BALLS -->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:stretchColumns="*">
+
+            <TableRow
+                android:paddingBottom="@dimen/ball_spacing"
+                android:paddingTop="@dimen/ball_spacing">
+
+                <ImageButton
+                    android:id="@+id/ball_red"
+                    style="@style/Balls"
+                    android:contentDescription="@string/red_ball"
+                    android:src="@drawable/red"/>
+
+                <ImageButton
+                    android:id="@+id/ball_yellow"
+                    style="@style/Balls"
+                    android:contentDescription="@string/yellow_ball"
+                    android:src="@drawable/yellow"/>
+
+                <ImageButton
+                    android:id="@+id/ball_green"
+                    style="@style/Balls"
+                    android:contentDescription="@string/green_ball"
+                    android:src="@drawable/green"/>
+
+                <ImageButton
+                    android:id="@+id/ball_brown"
+                    style="@style/Balls"
+                    android:contentDescription="@string/brown_ball"
+                    android:src="@drawable/brown"/>
+
+                <ImageButton
+                    android:id="@+id/ball_blue"
+                    style="@style/Balls"
+                    android:contentDescription="@string/blue_ball"
+                    android:src="@drawable/blue"/>
+            </TableRow>
+
+            <TableRow
+                android:paddingBottom="@dimen/ball_spacing"
+                android:paddingTop="@dimen/ball_spacing">
+
+                <ImageButton
+                    android:id="@+id/ball_pink"
+                    style="@style/Balls"
+                    android:contentDescription="@string/pink_ball"
+                    android:src="@drawable/pink"/>
+
+                <ImageButton
+                    android:id="@+id/ball_black"
+                    style="@style/Balls"
+                    android:contentDescription="@string/black_ball"
+                    android:src="@drawable/black"/>
+
+                <ImageButton
+                    android:id="@+id/ball_miss"
+                    style="@style/Balls"
+                    android:contentDescription="@string/miss_ball"
+                    android:src="@drawable/miss"/>
+
+                <ImageButton
+                    android:id="@+id/ball_foul"
+                    style="@style/Balls"
+                    android:contentDescription="@string/foul_ball"
+                    android:src="@drawable/foul"/>
+            </TableRow>
+        </TableLayout>
+
+        <!-- THE BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ball_free"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/free"
+                android:text="@string/free_button"/>
+
+            <Button
+                android:id="@+id/reset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableEnd="@drawable/reset"
+                android:text="@string/reset_button"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
