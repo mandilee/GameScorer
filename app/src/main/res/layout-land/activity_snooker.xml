@@ -144,6 +144,8 @@
                     android:contentDescription="@string/black_ball"
                     android:src="@drawable/black"/>
 
+                <Space style="@style/Balls"/>
+
                 <ImageButton
                     android:id="@+id/ball_miss"
                     style="@style/Balls"
