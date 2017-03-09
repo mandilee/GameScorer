@@ -9,8 +9,6 @@ class Ball {
     private final int mTextResId;
     private final int mPoints;
     private final int mNumOnTable;
-    private int mNumPottedPlayerOne = 0;
-    private int mNumPottedPlayerTwo = 0;
     private int mNumRemaining;
 
     private ImageButton mImageButton;
@@ -53,7 +51,6 @@ class Ball {
         return mTextResId;
     }
 
-
     int getPoints() {
         return mPoints;
     }
@@ -78,29 +75,9 @@ class Ball {
         mNumRemaining--;
     }
 
-
-    int getNumPottedPlayerTwo() {
-        return mNumPottedPlayerTwo;
-    }
-
-    void setNumPottedPlayerTwo() {
-        mNumPottedPlayerTwo++;
-    }
-
-    int getNumPottedPlayerOne() {
-        return mNumPottedPlayerOne;
-    }
-
-    void setNumPottedPlayerOne() {
-        mNumPottedPlayerOne++;
-    }
-
     void doReset() {
-        mNumPottedPlayerOne = 0;
-        mNumPottedPlayerTwo = 0;
         mNumRemaining = mNumOnTable;
     }
-
 
     void setBallActive() {
         mImageButton.setBackgroundResource(R.color.activeBallBackground);

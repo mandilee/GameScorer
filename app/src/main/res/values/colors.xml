@@ -3,19 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="buttonBackground">#FFFFFF</color>
 
-    <color name="winnerPlayerText">#000000</color>
     <color name="winnerPlayerBackground">#00FF00</color>
 
-    <color name="activePlayerText">#000000</color>
     <color name="activePlayerBackground">#FFFF00</color>
 
-    <color name="inactivePlayerText">#999999</color>
-    <color name="inactivePlayerBackground">#FFFF</color>
-
     <color name="activeBallBackground">#FFFF00</color>
-    <color name="inactiveBallBackground">#0a6c03</color>
 
     <color name="snookerTableGreen">#0a6c03</color>
 </resources>
