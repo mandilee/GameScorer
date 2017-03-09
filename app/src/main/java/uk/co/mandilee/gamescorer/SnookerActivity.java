@@ -109,19 +109,25 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
 
                         // activeBall was potted, all is good
                         if (activeBall == ball) {
-                            setScore(points);
                             shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(activeBall), points));
+                            setScore(points);
 
                             // activeBall == null when all colored balls are on i.e. when a red has just been potted
                             // if ball index > 0 (i.e. not red) all is good
                         } else if (activeBall == null && balls.indexOf(ball) > 0) {
-                            setScore(ball.getPoints());
                             shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), points, 0, NORMAL_BALL));
+                            setScore(ball.getPoints());
 
                             // if is FreeBall, all is good
-                        } else if (isFree) {
+                        } else if (isFree && activeBall != null) {
+                            //public Shot(int playerId, int ballPotted, int points, int ballOn, int type)
+                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), activeBall.getPoints(), balls.indexOf(activeBall), FREE_BALL));
                             setScore(activeBall.getPoints());
-                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), activeBall.getPoints(), 0, FREE_BALL));
+
+                            // if is FreeBall, all is good
+                        } else if (isFree && activeBall == null) {
+                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), ball.getPoints(), 0, FREE_BALL));
+                            setScore(ball.getPoints());
 
                             // otherwise it's a foul!
                         } else {

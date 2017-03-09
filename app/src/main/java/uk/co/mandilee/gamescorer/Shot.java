@@ -11,22 +11,22 @@ class Shot extends SnookerActivity {
     /**
      * the active player
      */
-    private final int mPlayerId;
+    private int mPlayerId;
 
     /**
      * which ball was potted
      */
-    private final int mBallPotted;
+    private int mBallPotted;
 
     /**
      * which ball should have been potted
      */
-    private final int mBallOn;
+    private int mBallOn;
 
     /**
      * how many points were awarded (negative were awarded to the other player)
      */
-    private final int mPoints;
+    private int mPoints;
 
     /**
      * what type of action was processed
@@ -62,5 +62,25 @@ class Shot extends SnookerActivity {
         mBallOn = ballOn;
         mPoints = points;
         mType = type;
+    }
+
+    int getPlayerId() {
+        return mPlayerId;
+    }
+
+    int getBallPotted() {
+        return mBallPotted;
+    }
+
+    int getBallOn() {
+        return mBallOn;
+    }
+
+    int getPoints() {
+        return mPoints;
+    }
+
+    int getType() {
+        return mType;
     }
 }
