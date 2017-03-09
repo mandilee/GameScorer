@@ -5,62 +5,105 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * Created by manda on 05/03/2017.
- */
 
+/**
+ * {@link Player} represents a player in the game of snooker.
+ * It contains a the Views to be manipulated - EditText player name, TextView player score
+ * and LinearLayout (to show active player), and int score
+ */
 class Player {
+
+    /**
+     * EditText that holds the player name
+     */
     private final EditText mEtPlayerName;
+
+    /** TextView that holds the player score */
     private final TextView mTvPlayerScore;
+
+    /** LinearLayout that holds the player */
     private final LinearLayout mLlPlayer;
+
+    /** the players score */
     private int mScore = 0;
 
-    public Player(EditText etPlayerName, TextView tvPlayerScore, LinearLayout llPlayer) {
+    /**
+     * Create a new Player object.
+     *
+     * @param etPlayerName  is the EditText view that contains the players name
+     * @param tvPlayerScore is the TextView that displays the players score
+     * @param llPlayer      is the LinearLayout that holds the Player information
+     */
+    Player(EditText etPlayerName, TextView tvPlayerScore, LinearLayout llPlayer) {
         mEtPlayerName = etPlayerName;
         mTvPlayerScore = tvPlayerScore;
         mLlPlayer = llPlayer;
     }
 
-    public String getPlayerName() {
+    /**
+     * Return the player name
+     */
+    String getPlayerName() {
         return String.valueOf(mEtPlayerName.getText());
     }
 
-// --Commented out by Inspection START (06/03/2017 22:31):
-//    public void setPlayerName(String playerName) {
-//        mPlayerName = playerName;
-//    }
-// --Commented out by Inspection STOP (06/03/2017 22:31)
-
-    public void addScore(int score) {
+    /**
+     * Add the given points to the players score
+     */
+    void addScore(int score) {
         mScore += score;
         displayScore();
     }
+
+    /**
+     * Update the TextView with the players score
+     */
 
     private void displayScore() {
         mTvPlayerScore.setText(String.valueOf(mScore));
     }
 
-    public int getScore() {
+
+    /**
+     * Get the players score
+     */
+    int getScore() {
         return mScore;
     }
 
-    public void doReset() {
+
+    /**
+     * Reset the players score
+     */
+    void doReset() {
         mScore = 0;
         displayScore();
     }
 
-    public void setInactive() {
+    /**
+     * Set the player inactive by changing the background
+     */
+    void setInactive() {
         setColors(Color.GRAY, R.color.snookerTableGreen);
     }
 
-    public void setActive() {
+    /**
+     * Set the player active by changing the background
+     */
+    void setActive() {
         setColors(Color.BLACK, R.color.activePlayerBackground);
     }
 
-    public void setWinner() {
+    /**
+     * Set the player as the winner by changing the background
+     */
+    void setWinner() {
         setColors(Color.BLACK, R.color.winnerPlayerBackground);
     }
 
+    /**
+     * Set the Text and Background colours as given
+     */
     private void setColors(int textColor, int backgroundColour) {
         mEtPlayerName.setTextColor(textColor);
         mTvPlayerScore.setTextColor(textColor);

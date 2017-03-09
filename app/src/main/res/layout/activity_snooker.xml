@@ -148,17 +148,17 @@
             android:orientation="vertical"
             >
 
-        <TextView
-            android:id="@+id/current_activity"
-            style="@style/WWrapHWrap.PlayerName"
-            android:layout_gravity="center"
-            tools:text="Red Ball On"/>
+            <TextView
+                android:id="@+id/current_activity"
+                style="@style/WWrapHWrap.PlayerName"
+                android:layout_gravity="center"
+                tools:text="Red Ball On"/>
 
-        <TextView
-            android:id="@+id/red_balls_remaining"
-            style="@style/WWrapHWrap.PlayerName"
-            android:layout_gravity="center"
-            tools:text="15 Remaining"/>
+            <TextView
+                android:id="@+id/red_balls_remaining"
+                style="@style/WWrapHWrap.PlayerName"
+                android:layout_gravity="center"
+                tools:text="15 Remaining"/>
         </LinearLayout>
         <!-- THE BUTTONS -->
         <LinearLayout
