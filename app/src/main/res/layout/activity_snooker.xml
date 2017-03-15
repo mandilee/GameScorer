@@ -63,7 +63,6 @@
             </LinearLayout>
         </LinearLayout>
 
-
         <!-- The Summary -->
         <LinearLayout
             android:id="@+id/summary"
@@ -96,6 +95,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="10dp"/>
         </LinearLayout>
+
         <!-- THE BALLS -->
         <TableLayout
             android:id="@+id/the_balls"
