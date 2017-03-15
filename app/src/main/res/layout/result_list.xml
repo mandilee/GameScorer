@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/player_one"
+            style="@style/ResultPlayer.Title"
+            tools:text="@string/player_1_name"/>
+
+        <Space style="@style/ResultBall"/>
+
+        <TextView
+            android:id="@+id/player_two"
+            style="@style/ResultPlayer.Title"
+            tools:text="@string/player_2_name"/>
+
+    </LinearLayout>
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/list"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"/>
+</LinearLayout>

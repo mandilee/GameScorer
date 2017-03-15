@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/snookerTableGreen</item>
     </style>
 
     <style name="Player">
@@ -55,16 +56,31 @@
         <item name="android:layout_weight">1</item>
     </style>
 
-    <style name="WWrapHWrap.BallInfo.Potted">
-
+    <style name="Buttons" parent="@style/Widget.AppCompat.Button.Small">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginEnd">6dp</item>
+        <item name="android:layout_marginStart">6dp</item>
     </style>
 
-    <style name="WWrapHWrap.BallInfo.Free">
-
+    <style name="ResultBall">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:padding">10dp</item>
     </style>
 
-    <style name="WWrapHWrap.BallInfo.OnTable">
-
+    <style name="ResultPlayer">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">36sp</item>
     </style>
 
+    <style name="ResultPlayer.Title">
+        <item name="android:textSize">24sp</item>
+    </style>
 </resources>

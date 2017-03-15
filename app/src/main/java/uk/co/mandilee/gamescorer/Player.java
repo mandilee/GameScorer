@@ -81,21 +81,21 @@ class Player {
     }
 
     /**
-     * Set the player inactive by changing the background
+     * Set the player inactive by changing the activeball
      */
     void setInactive() {
         setColors(Color.GRAY, R.color.snookerTableGreen);
     }
 
     /**
-     * Set the player active by changing the background
+     * Set the player active by changing the activeball
      */
     void setActive() {
-        setColors(Color.BLACK, R.color.activePlayerBackground);
+        setColors(Color.BLACK, R.drawable.activeplayer);
     }
 
     /**
-     * Set the player as the winner by changing the background
+     * Set the player as the winner by changing the activeball
      */
     void setWinner() {
         setColors(Color.BLACK, R.color.winnerPlayerBackground);

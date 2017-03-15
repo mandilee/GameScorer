@@ -6,7 +6,7 @@ package uk.co.mandilee.gamescorer;
  * It contains the player, active ball, potted ball, number of points awarded
  * and shot type (normal, free, miss, foul)
  */
-class Shot extends SnookerActivity {
+class Shot {
 
     /**
      * the active player
@@ -44,6 +44,21 @@ class Shot extends SnookerActivity {
         mPlayerId = playerId;
         mBallPotted = ballPotted;
         mBallOn = ballPotted;
+        mPoints = points;
+    }
+
+    /**
+     * Create a new Shot object.
+     *
+     * @param playerId is the ArrayList id of the player who was active
+     * @param ballOn   is the ball that was active
+     * @param type     is the type of action (free, miss, foul)
+     * @param points   is the number of points awarded (negative is penalty awarded to other player)
+     */
+    Shot(int playerId, int ballOn, int type, int points) {
+        mPlayerId = playerId;
+        mBallOn = ballOn;
+        mType = type;
         mPoints = points;
     }
 

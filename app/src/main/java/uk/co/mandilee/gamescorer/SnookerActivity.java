@@ -1,12 +1,14 @@
 package uk.co.mandilee.gamescorer;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,12 +17,12 @@ import java.util.List;
 
 public class SnookerActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int NORMAL_BALL = 0;
-    private static final int FREE_BALL = 1;
-    private static final int MISS_BALL = 2;
-    private static final int FOUL_BALL = 3;
-    private static final int RESET = 4;
-
+    private static final int NORMAL_BALL = 0,
+            FREE_BALL = 1,
+            MISS_BALL = 2,
+            FOUL_BALL = 3,
+            RESET = 4,
+            UNDO_MOVE = 5;
 
     private List<Ball> balls;
     private Ball activeBall;
@@ -30,7 +32,8 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
 
     private List<Shot> shots;
 
-    private int minBall = 1; // increments as all balls of specific colour are potted to keep fouls correct after reds gone
+    private int minBall = 0; // increments as all balls of specific colour are potted to keep fouls correct after reds gone
+    private Ball redBall;
 
     private Boolean isFree = false,
             isFoul = false,
@@ -38,6 +41,8 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView tvCurrentActivity, // TextView to update current Ball On
             tvRedBallsRemaining; // TextView to show how many red balls remaining
+    private LinearLayout llSummary;
+    private TableLayout tlTheBalls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,8 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
         players.add(new Player((EditText) findViewById(R.id.player_two_name), (TextView) findViewById(R.id.player_two_score), (LinearLayout) findViewById(R.id.player_two)));
         activePlayer = players.get(1); // set the WRONG active player - we "switch" it to set the formatting soon
 
-        balls = new ArrayList<>(); // set up the balls
+        balls = new ArrayList<>();
+        // set up the balls
         balls.add(new Ball(R.string.red_ball, 1, 15, (ImageButton) findViewById(R.id.ball_red)));
         balls.add(new Ball(R.string.yellow_ball, 2, 1, (ImageButton) findViewById(R.id.ball_yellow)));
         balls.add(new Ball(R.string.green_ball, 3, 1, (ImageButton) findViewById(R.id.ball_green)));
@@ -59,15 +65,21 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
         balls.add(new Ball(R.string.black_ball, 7, 1, (ImageButton) findViewById(R.id.ball_black)));
         balls.add(new Ball(R.string.miss_ball, (ImageButton) findViewById(R.id.ball_miss), MISS_BALL));
         balls.add(new Ball(R.string.foul_ball, (ImageButton) findViewById(R.id.ball_foul), FOUL_BALL));
+        // add the misc buttons
         balls.add(new Ball(R.string.free_button, (Button) findViewById(R.id.ball_free), FREE_BALL));
+        balls.add(new Ball(R.string.undo_move, (Button) findViewById(R.id.undo), UNDO_MOVE));
         balls.add(new Ball(R.string.reset_button, (Button) findViewById(R.id.reset), RESET));
+
         activeBall = balls.get(0); // set the active ball
+        redBall = balls.get(0);
 
         shots = new ArrayList<>();
 
-        // Grab required TextViews
+        // Grab required Views
         tvCurrentActivity = (TextView) findViewById(R.id.current_activity);
         tvRedBallsRemaining = (TextView) findViewById(R.id.red_balls_remaining);
+        llSummary = (LinearLayout) findViewById(R.id.summary);
+        tlTheBalls = (TableLayout) findViewById(R.id.the_balls);
 
         // loop through balls and set OnClickListeners
         for (Ball ball : balls) {
@@ -78,21 +90,7 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        switchPlayer(); // set formatting for active player and ball
-    }
-
-    private void setFreeBall(Boolean free) {
-        isFree = free;
-
-        int backgroundColour;
-        // select colour based on whether or not free is true
-        if (isFree) {
-            backgroundColour = R.color.activeBallBackground;
-        } else {
-            backgroundColour = android.R.drawable.btn_default;
-        }
-
-        balls.get(9).getButton().setBackgroundResource(backgroundColour);
+        setActivePlayer(); // set formatting for active player and ball
     }
 
     @Override
@@ -102,60 +100,74 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
         for (Ball ball : balls) {
             if (ball.isImageButton()) {
                 if (v.getId() == ball.getImageButton().getId()) {
-                    int points = ball.getPoints();
-                    int type = ball.getType();
 
-                    if (points > 0) {
+                    // if it's a miss, just need to switch player
+                    if (ball.getType() == MISS_BALL) {
+                        shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(activeBall), MISS_BALL, 0));
+                        setActivePlayer();
+                        return; // no more to do so quit it here
 
-                        // activeBall was potted, all is good
-                        if (activeBall == ball) {
-                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(activeBall), points));
-                            setScore(points);
+                        // if it's a foul,
+                        // or it's not a free ball and active ball isn't the one potted
+                        // set the Foul flag
+                    } else if (ball.getType() == FOUL_BALL ||   // foul has been clicked
+                            (ball != activeBall && !isFree && activeBall != null) ||      // or non-active ball potted and not free
+                            (activeBall == null && ball == redBall)) { // or red was potted when colours were On
 
-                            // activeBall == null when all colored balls are on i.e. when a red has just been potted
-                            // if ball index > 0 (i.e. not red) all is good
-                        } else if (activeBall == null && balls.indexOf(ball) > 0) {
-                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), points, 0, NORMAL_BALL));
-                            setScore(ball.getPoints());
+                        int points;
 
-                            // if is FreeBall, all is good
-                        } else if (isFree && activeBall != null) {
-                            //public Shot(int playerId, int ballPotted, int points, int ballOn, int type)
-                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), activeBall.getPoints(), balls.indexOf(activeBall), FREE_BALL));
-                            setScore(activeBall.getPoints());
+                        setIsFoul(true);
+                        setBallPotted(ball);
 
-                            // if is FreeBall, all is good
-                        } else if (isFree && activeBall == null) {
-                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), ball.getPoints(), 0, FREE_BALL));
-                            setScore(ball.getPoints());
-
-                            // otherwise it's a foul!
+                        if (activeBall == null || activeBall.getPoints() < 4) {
+                            points = 4;
                         } else {
-                            isFoul = true;
-                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(activeBall), 0, balls.indexOf(ball), FOUL_BALL));
-                            setFoul();
+                            points = activeBall.getPoints();
                         }
 
-                        // missed ball switches player. That is all
-                    } else if (type == MISS_BALL) {
-                        isMiss = true;
-                        shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(activeBall), 0, balls.indexOf(ball), MISS_BALL));
-                        switchPlayer();
-
-                        // foul ball gives penalty points to the other player
-                    } else if (type == FOUL_BALL) {
-                        isFoul = true;
-                        shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(activeBall), 0, balls.indexOf(ball), FOUL_BALL));
-                        setFoul();
+                        shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), -points, balls.indexOf(activeBall), FOUL_BALL));
+                        setActivePlayer();
+                        activePlayer.addScore(points);
+                        return;
                     }
+
+                    // if it's a free ball then any ball is fair game
+                    if (isFree && !isFoul) {
+                        if (activeBall != null) {
+                            // free ball gives active ball points
+                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), activeBall.getPoints(), balls.indexOf(activeBall), FREE_BALL));
+                            activePlayer.addScore(activeBall.getPoints());
+                        } else {
+                            // null activeBall means a colour was potted.
+                            // use those points
+                            shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), ball.getPoints(), -1, FREE_BALL));
+                            activePlayer.addScore(ball.getPoints());
+                        }
+                        setIsFree(false);
+                        return; // no more to do so quit it here
+                    }
+
+                    // if none of the above apply, it must be a proper pot!
+                    if (activeBall == null) {
+                        shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), ball.getPoints(), -1, NORMAL_BALL));
+                    } else {
+                        shots.add(new Shot(players.indexOf(activePlayer), balls.indexOf(ball), ball.getPoints()));
+                    }
+
+                    activePlayer.addScore(ball.getPoints());
+                    autoSetBallOn(ball);
                 }
 
-                // ball wasn't potted, button was pressed
             } else {
                 if (v.getId() == ball.getButton().getId()) {
                     int type = ball.getType();
                     if (type == FREE_BALL) {
-                        setFreeBall(true); // set the free ball
+                        setIsFree(true); // set the free ball
+
+                    } else if (type == UNDO_MOVE) {
+                        undo(); // set the free ball
+
+
                     } else if (type == RESET) {
                         resetButton(); // reset
                     }
@@ -168,149 +180,112 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
         Toast.makeText(getBaseContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private void switchPlayer() {
-        if (activePlayer == players.get(0)) {
-            // If player 1 is active, switch to player 2
-            activePlayer = players.get(1);
-            players.get(1).setActive();
-            players.get(0).setInactive();
-        } else {
-            // If player 2 is active, switch to player 2
-            activePlayer = players.get(0);
-            players.get(0).setActive();
-            players.get(1).setInactive();
-        }
-
-        // if it's not a foul or a miss, or there are red balls remaining, set active ball to Red
-        if ((!isFoul && !isMiss) || balls.get(0).getNumRemaining() > 0) {
-            setActiveBall(0);
-        } else {
-            activeBall = balls.get(minBall);
+    private void setBallPotted(Ball potted) {
+        if (activeBall == potted || potted == redBall) {
+            potted.setOnePotted();
+            tvRedBallsRemaining.setText(String.valueOf(redBall.getNumRemaining()) + " " + getString(R.string.red_balls_remaining));
+            if (potted.getNumRemaining() == 0) {
+                potted.disableButton();
+                showText("There are no " + getString(potted.getTextResId()) + " balls left");
+            }
         }
     }
 
-    private void setScore(int addThisScore) {
-        int activeBallPoints = 0;
+    private void autoSetBallOn(Ball potted) {
+        setBallPotted(potted);
 
-        if (activeBall != null) {
-            activeBallPoints = activeBall.getPoints();
-        }
-
-        if (isFree) {
-            if (activeBall == null) {
-                addThisScore = 1;
+        if (activeBall == null) {
+            activeBall = redBall;
+        } else if (activeBall == balls.get(6)) { //black ball
+            setWinner();
+        } else if (potted == redBall) {             // if the red ball is potted
+            if (redBall.getNumRemaining() > 0) {    // and there are some red balls left
+                activeBall = null;                  // flip to "colored balls active"
             } else {
-                addThisScore = activeBallPoints;
+                activeBall = balls.get(1);          // otherwise next ball is Yellow
             }
-        }
-        // if potted ball isn't active then set as foul!
-        if (!isFoul && activeBallPoints > 0 && activeBallPoints != addThisScore && !isFree) {
-            isFoul = true;
-            if (activeBallPoints == 1) {
-                showText(getString(R.string.foul_potted) + " " + getString(R.string.red_ball));
-            }
-            setFoul();
         } else {
-            activePlayer.addScore(addThisScore);
-
-            if (!isFoul || balls.get(0).getNumRemaining() > 0) {
-                setActiveBall(addThisScore);
+            for (Ball ball : balls) {               // loop through the balls
+                if (ball.getNumRemaining() > 0) {   // find the first one with balls remaining
+                    activeBall = ball;              // and set that active
+                    break;
+                }
             }
         }
-
-        isFoul = false;
-        setFreeBall(false);
-        //*/
-    }
-
-    private void setFoul() {
-        int score = 0;
         if (activeBall != null) {
-            score = activeBall.getPoints();
+            tvCurrentActivity.setText(getString(R.string.ball_on) + " " + getString(activeBall.getTextResId()));
+        } else {
+            tvCurrentActivity.setText(getString(R.string.ball_on) + " " + getString(R.string.colored_balls_on));
         }
-        if (score < 4) { // minimum of 4 penalty points
-            score = 4;
-        }
-        switchPlayer(); // other player gets the points so switch first
-        setScore(score); // then set the score
+
+        setBallStyles();
     }
 
-    private void setBallActive() {
+    @NonNull
+    private Boolean resetBallOn() {
+        if (redBall.getNumRemaining() > 0) {        // if there are red balls remaining
+            activeBall = redBall;                   // set it active
+            tvRedBallsRemaining.setText(String.valueOf(redBall.getNumRemaining()) + " " + getString(R.string.red_balls_remaining));
+            tvCurrentActivity.setText(getString(R.string.ball_on) + " " + getString(activeBall.getTextResId()));
+            setBallStyles();
+            return true;                            // and return true
+        } else {
+            return false;                           // otherwise, return false to trigger setOnBall()
+        }
+    }
+
+    private void setBallStyles() {
         for (Ball ball : balls) {
-            if (ball.getPoints() > 0 && ball.isImageButton()) {
-                if (ball == activeBall) {
-                    ball.setBallActive();
+            if (ball.isImageButton() && ball.getPoints() > 0) {
+                if (activeBall == null) {
+                    if (ball != redBall) {
+                        ball.setBallActive();
+                    } else {
+                        ball.setBallInactive();
+                    }
                 } else {
-                    ball.setBallInactive();
+                    if (ball == activeBall) {
+                        ball.setBallActive();
+                    } else {
+                        ball.setBallInactive();
+                    }
                 }
             }
         }
     }
 
-    private void setColoredBallsActive() {
-        for (int i = 0; i < balls.size(); i++) {
-            if (balls.get(i).getPoints() > 0 && balls.get(i).isImageButton()) {
-                if (i == 0) {
-                    balls.get(i).setBallInactive();
-                } else {
-                    balls.get(i).setBallActive();
-                }
-            }
-        }
-    }
-
-    private void setActiveBall(int ball) {
-        if (ball == 1) {
-            balls.get(0).setOnePotted();
-        }
-        if (balls.get(0).getNumRemaining() > 0) {
-            if ((ball == 1 && balls.get(0) == activeBall) || (isFree && balls.get(0) == activeBall)) {
-                activeBall = null;
-                setColoredBallsActive();
-                tvCurrentActivity.setText(getText(R.string.colored_balls_on));
-
-            } else if (ball == 1 && balls.get(0) != activeBall && !isFree) {
-                isFoul = true;
-                showText(getString(R.string.foul_potted) + " " + getString(R.string.color));
-                setFoul();
-                tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(balls.get(0).getTextResId()));
-
-            } else if (!isFree) {
-                activeBall = balls.get(0);
-                setBallActive();
-                tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(balls.get(0).getTextResId()));
-            }
-            tvRedBallsRemaining.setText(balls.get(0).getNumRemaining() + " " + getString(R.string.red_balls_remaining));
-
-        } else if (balls.get(0).getNumRemaining() == 0) {
-            balls.get(0).setOnePotted();
-            activeBall = balls.get(1);
-            minBall = 1;
-            setBallActive();
-            balls.get(0).disableImageButton();
-            tvRedBallsRemaining.setText("");
-            tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(balls.get(ball).getTextResId()));
-
+    private void setActivePlayer() {
+        activePlayer.setInactive();                 // set current activePlayer as active
+        if (activePlayer == players.get(0)) {       // if first player is active
+            activePlayer = players.get(1);          // switch to player two
         } else {
-            if (ball == 7) {
-                balls.get(6).disableImageButton();
-                activeBall = null;
-                checkWinner();
-            } else {
-                balls.get((ball - 1)).disableImageButton();
-                activeBall = balls.get(ball);
-                minBall = ball;
-            }
-            tvCurrentActivity.setText(getText(R.string.ball_on) + " " + getText(balls.get(ball).getTextResId()));
-            setBallActive();
+            activePlayer = players.get(0);          // otherwise switch to first player
         }
-        setFreeBall(false);
+        activePlayer.setActive();                   // set new activePlayer as active
+        resetBallOn();
+        setIsFoul(false);
+        setIsFree(false);
+    }
+
+    private void setIsFoul(Boolean isTrue) {
+        isFoul = isTrue;
+    }
+
+    private void setIsFree(Boolean isTrue) {
+        isFree = isTrue;
     }
 
     private void resetButton() {
         for (Player player : players) {
             player.doReset();
         }
+
+        shots.clear();
+
+        tvCurrentActivity.setVisibility(View.VISIBLE);
+        tvRedBallsRemaining.setVisibility(View.VISIBLE);
+        tlTheBalls.setVisibility(View.VISIBLE);
+        llSummary.setVisibility(View.GONE);
 
         activeBall = balls.get(0);
         activePlayer = players.get(1);
@@ -319,26 +294,85 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
 
         for (Ball ball : balls) {
             ball.doReset();
-            ball.enableImageButton();
+            ball.enableButton();
         }
 
-        switchPlayer();
+        setActivePlayer();
     }
 
-    private void checkWinner() {
-        balls.get(7).disableImageButton();
-        balls.get(8).disableImageButton();
+    private void undo() {
+        if (shots.size() > 0) {
+            Shot temp = shots.get(shots.size() - 1);
+            Ball tempBall = balls.get(temp.getBallPotted());
+            shots.remove(shots.size() - 1);
 
-        if (players.get(0).getScore() > players.get(1).getScore()) {
+            if (tempBall.getNumRemaining() < tempBall.getNumOnTable() && tempBall == redBall) {
+                tempBall.unsetOnePotted();
+            }
+            if (temp.getType() == FOUL_BALL) {
+                showText(getString(R.string.undone) + " " + getString(R.string.foul_ball));
+                activePlayer.addScore(temp.getPoints());
+                setActivePlayer();
+
+            } else if (temp.getType() == MISS_BALL) {
+                showText(getString(R.string.undone) + " " + getString(R.string.miss_ball));
+                setActivePlayer();
+
+            } else {
+                activePlayer.addScore(-temp.getPoints());
+
+                if (tempBall.getNumRemaining() < tempBall.getNumOnTable() && tempBall != redBall) {
+                    tempBall.unsetOnePotted();
+                }
+                tempBall.enableButton();
+
+                if (temp.getBallOn() == -1) {
+                    activeBall = null;
+                } else {
+                    activeBall = balls.get(temp.getBallOn());
+                }
+                showText(getString(R.string.undone) + " " + getString(tempBall.getTextResId()));
+
+            }
+
+            tvRedBallsRemaining.setText(String.valueOf(redBall.getNumRemaining()) + " " + getString(R.string.red_balls_remaining));
+            if (activeBall != null) {
+                tvCurrentActivity.setText(getString(R.string.ball_on) + " " + getString(activeBall.getTextResId()));
+            } else {
+                tvCurrentActivity.setText(getString(R.string.colored_balls_on));
+            }
+
+            setBallStyles();
+
+        } else {
+            showText(getString(R.string.nothing_to_undo));
+        }
+    }
+
+    private void setWinner() {
+        for (Ball ball : balls) {
+            if (ball.getType() != RESET) {
+                ball.setBallInactive();
+                ball.disableButton();
+            }
+        }
+
+        tvCurrentActivity.setVisibility(View.GONE);
+        tvRedBallsRemaining.setVisibility(View.GONE);
+        tlTheBalls.setVisibility(View.GONE);
+        setSummary();
+        llSummary.setVisibility(View.VISIBLE);
+
+
+        int player_one_score = players.get(0).getScore();
+        int player_two_score = players.get(1).getScore();
+
+        if (player_one_score > player_two_score) {
             players.get(0).setWinner();
-            players.get(1).setInactive();
-            showText(players.get(0).getPlayerName() + " " + getString(R.string.wins));
-
-        } else if (players.get(0).getScore() < players.get(1).getScore()) {
+            showText(getString(R.string.player_1_name) + " " + getString(R.string.wins));
+        } else if (player_one_score < player_two_score) {
             players.get(1).setWinner();
-            players.get(0).setInactive();
-            showText(players.get(1).getPlayerName() + " " + getString(R.string.wins));
-
+            showText(getString(R.string.player_2_name) + " " + getString(R.string.wins));
         } else {
             players.get(0).setInactive();
             players.get(1).setInactive();
@@ -346,4 +380,45 @@ public class SnookerActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void setSummary() {
+
+        int numOutcomes = balls.size() - 3; // ignore free, undo and reset
+        int[][] summary = new int[2][numOutcomes];
+        String[] outcomes = new String[numOutcomes];
+        String strOutcomes = "",
+                strPlayerOneSummary = "",
+                strPlayerTwoSummary = "";
+
+        // Views for Summary
+        TextView tvOutcomes = (TextView) findViewById(R.id.summary_outcomes);
+        TextView playerOneSummary = (TextView) findViewById(R.id.summary_player_one);
+        TextView playerTwoSummary = (TextView) findViewById(R.id.summary_player_two);
+
+        // loop through the outcomes to get the text names
+        for (int l = 0; l < numOutcomes; l++) {
+            outcomes[l] = getString(balls.get(l).getTextResId());
+        }
+
+        // loop through the shots to get the summary
+        for (Shot shot : shots) {
+            if (shot.getType() == FOUL_BALL) {
+                summary[shot.getPlayerId()][8]++;
+            } else {
+                summary[shot.getPlayerId()][shot.getBallPotted()]++;
+            }
+        }
+
+        // create the strings from the arrays
+        for (int l = 0; l < numOutcomes; l++) {
+            strOutcomes += outcomes[l] + "\n";
+            strPlayerOneSummary += summary[0][l] + "\n";
+            strPlayerTwoSummary += summary[1][l] + "\n";
+        }
+
+        // set the strings as the display
+        tvOutcomes.setText(strOutcomes);
+        playerOneSummary.setText(strPlayerOneSummary);
+        playerTwoSummary.setText(strPlayerTwoSummary);
+
+    }
 }

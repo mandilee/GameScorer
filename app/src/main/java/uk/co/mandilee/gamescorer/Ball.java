@@ -1,6 +1,6 @@
 package uk.co.mandilee.gamescorer;
 
-import android.graphics.Color;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -137,6 +137,13 @@ class Ball {
     }
 
     /**
+     * Get how many of these balls are on the table at the start
+     */
+    int getNumOnTable() {
+        return mNumOnTable;
+    }
+
+    /**
      * Get how many of these balls are left on the table
      */
     int getNumRemaining() {
@@ -151,6 +158,13 @@ class Ball {
     }
 
     /**
+     * Decrease the number of balls remaining
+     */
+    void unsetOnePotted() {
+        mNumRemaining++;
+    }
+
+    /**
      * Reset the number of balls
      */
     void doReset() {
@@ -158,36 +172,47 @@ class Ball {
     }
 
     /**
-     * Set the ball as active by changing the background
+     * Set the ball as active by changing the activeball
      */
     void setBallActive() {
-        mImageButton.setBackgroundResource(R.color.activeBallBackground);
+        if (isImageButton()) {
+            mImageButton.setBackgroundResource(R.drawable.activeball);
+        }
     }
 
     /**
-     * Get the ball as inactive by changing the background
+     * Get the ball as inactive by changing the activeball
      */
     void setBallInactive() {
-        mImageButton.setBackgroundResource(R.color.snookerTableGreen);
+        if (isImageButton()) {
+            mImageButton.setBackgroundResource(R.color.snookerTableGreen);
+        }
     }
 
     /**
      * All balls have been potted so hide and disable the ImageButton
      */
-    void disableImageButton() {
+    void disableButton() {
         if (isImageButton()) {
             mImageButton.setClickable(false);
-            mImageButton.setColorFilter(Color.argb(255, 10, 108, 3));
+            mImageButton.setVisibility(View.INVISIBLE);
+        } else {
+            mButton.setClickable(false);
+            mButton.setVisibility(View.INVISIBLE);
         }
     }
 
     /**
      * Enable and display the ImageButton
      */
-    void enableImageButton() {
+    void enableButton() {
         if (isImageButton()) {
             mImageButton.setClickable(true);
-            mImageButton.setColorFilter(Color.argb(0, 10, 108, 3));
+            mImageButton.setVisibility(View.VISIBLE);
+        } else {
+            mButton.setClickable(true);
+            mButton.setVisibility(View.VISIBLE);
+
         }
     }
 }

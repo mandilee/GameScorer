@@ -11,4 +11,8 @@
     <color name="activeBallBackground">#FFFF00</color>
 
     <color name="snookerTableGreen">#0a6c03</color>
+
+    <color name="disabledButton">#28FF0000</color>
+    <color name="enabledButton">#9000FF00</color>
+    <color name="focusButton">#500000FF</color>
 </resources>
